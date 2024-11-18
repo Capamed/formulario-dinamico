@@ -1,0 +1,48 @@
+<div *ngIf="formStructure" class="p-fluid p-m-3">
+  <h2>Formulario Dinámico</h2>
+
+  <form [formGroup]="dynamicForm" (ngSubmit)="onSubmit()">
+    <div *ngFor="let field of formStructure.fields">
+      <div class="p-field" *ngIf="field.type !== 'hidden'">
+        <label [for]="field.name">{{ field.label }}</label>
+
+        <!-- Campo de tipo 'text' o 'number' -->
+        <input *ngIf="field.type === 'text' || field.type === 'number'"
+               type="text" pInputText
+               [formControlName]="field.name"
+               [placeholder]="field.placeholder"
+               [attr.required]="field.validators.includes('required') ? true : null"
+               [disabled]="field.dependsOn && !dynamicForm.get(field.dependsOn)?.value" />
+
+        <!-- Campo de tipo 'select' -->
+        <p-dropdown *ngIf="field.type === 'select'"
+                    [options]="options[field.name]"
+                    [formControlName]="field.name"
+                    [placeholder]="field.placeholder"
+                    (onChange)="onFieldChange(field)">
+        </p-dropdown>
+
+        <!-- Campo de tipo 'checkbox' -->
+        <p-checkbox *ngIf="field.type === 'checkbox'"
+                    [formControlName]="field.name"
+                    [label]="field.label">
+        </p-checkbox>
+
+        <!-- Campo de tipo 'date' -->
+        <p-calendar *ngIf="field.type === 'date'"
+                    [formControlName]="field.name"
+                    [placeholder]="field.placeholder">
+        </p-calendar>
+
+        <!-- Mostrar mensajes de error -->
+        <div *ngIf="dynamicForm.get(field.name)?.invalid && dynamicForm.get(field.name)?.touched" class="p-error">
+          <small *ngIf="dynamicForm.get(field.name)?.hasError('required')">Este campo es obligatorio.</small>
+        </div>
+      </div>
+    </div>
+
+    <button pButton type="submit" label="Enviar" [disabled]="dynamicForm.invalid" class="p-mt-2"></button>
+  </form>
+
+  <p-toast></p-toast> <!-- Para mostrar mensajes con PrimeNG Toast -->
+</div>

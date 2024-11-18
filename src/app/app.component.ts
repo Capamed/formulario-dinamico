@@ -1,10 +1,12 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { DynamicFormComponent } from './dynamic-form/dynamic-form.component';
+import { BrowserModule } from '@angular/platform-browser';
+
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet],
+  imports:[DynamicFormComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
